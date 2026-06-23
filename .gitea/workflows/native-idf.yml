@@ -1,0 +1,77 @@
+name: Native ESP-IDF
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - dev
+      - "codex/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: espressif/idf:v6.0.1
+    env:
+      QUOTES_CLOCK_TLS_CERT_PEM_B64: ${{ secrets.QUOTES_CLOCK_TLS_CERT_PEM_B64 }}
+      QUOTES_CLOCK_TLS_KEY_PEM_B64: ${{ secrets.QUOTES_CLOCK_TLS_KEY_PEM_B64 }}
+    steps:
+      - name: Checkout repository
+        env:
+          GITEA_SERVER_URL: ${{ github.server_url }}
+          GITEA_REPOSITORY: ${{ github.repository }}
+          GITEA_SHA: ${{ github.sha }}
+          GITEA_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "$GITEA_SERVER_URL/$GITEA_REPOSITORY"
+          git config --global --add safe.directory "$PWD"
+          auth_header="$(python -c 'import base64, os; print("AUTHORIZATION: basic " + base64.b64encode(("x-access-token:" + os.environ["GITEA_TOKEN"]).encode()).decode())')"
+          git -c "http.$GITEA_SERVER_URL/.extraheader=$auth_header" fetch --no-tags --depth=1 origin "+$GITEA_SHA:refs/remotes/ci/head"
+          git checkout --force refs/remotes/ci/head
+      - name: Build native ESP-IDF firmware
+        run: |
+          . /opt/esp/idf/export.sh
+          python - <<'PY'
+          import tomllib
+          from pathlib import Path
+
+          dependencies = tomllib.loads(Path("pyproject.toml").read_text())["project"]["dependencies"]
+          requirements = Path("build/ci-requirements.txt")
+          requirements.parent.mkdir(exist_ok=True)
+          requirements.write_text("\n".join(dependencies) + "\n")
+          PY
+          python -m pip install -r build/ci-requirements.txt
+          make PYTHON=python NATIVE_IDF_TLS_ARGS=--allow-insecure-fallback native-idf-rescue-bin check-native-idf-size
+      - name: Publish rescue firmware package
+        env:
+          GITEA_EVENT_NAME: ${{ github.event_name }}
+          GITEA_REPOSITORY: ${{ github.repository }}
+          GITEA_SERVER_URL: ${{ github.server_url }}
+          GITEA_SHA: ${{ github.sha }}
+          PACKAGES_TOKEN: ${{ secrets.PACKAGES_TOKEN }}
+        run: |
+          if [ "$GITEA_EVENT_NAME" != "push" ]; then
+            echo "Skipping package upload for $GITEA_EVENT_NAME"
+            exit 0
+          fi
+          owner="${GITEA_REPOSITORY%%/*}"
+          version="$(printf '%.12s' "$GITEA_SHA")"
+          file="firmware/native-idf/build/quotes-clock-native-rescue.bin"
+          filename="quotes-clock-native-rescue-$version.bin"
+          package_url="$GITEA_SERVER_URL/api/packages/$owner/generic/quotes-clock-native/$version/$filename"
+          if [ -z "$PACKAGES_TOKEN" ]; then
+            echo "Missing PACKAGES_TOKEN secret for package upload" >&2
+            exit 1
+          fi
+          curl --silent --show-error --fail \
+            --request DELETE \
+            --header "Authorization: token $PACKAGES_TOKEN" \
+            "$package_url" 2>/dev/null || true
+          curl --fail --silent --show-error \
+            --request PUT \
+            --header "Authorization: token $PACKAGES_TOKEN" \
+            --upload-file "$file" \
+            "$package_url"
+          echo "Published package quotes-clock-native/$version/$filename"

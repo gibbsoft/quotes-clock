@@ -1,0 +1,24 @@
+idf_component_register(
+    SRCS
+      "main.cpp"
+      "app_config.cpp"
+      "native_display.cpp"
+      "native_https_server.cpp"
+      "native_sntp.cpp"
+      "native_wifi.cpp"
+      "platform_state.cpp"
+  INCLUDE_DIRS
+    "."
+  PRIV_REQUIRES
+      app_update
+      esp_https_server
+      esp_driver_gpio
+      esp_driver_spi
+      esp_event
+      esp_netif
+      esp_timer
+      esp_wifi
+      lwip
+      mbedtls
+      nvs_flash
+  )

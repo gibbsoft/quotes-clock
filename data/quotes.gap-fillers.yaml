@@ -1,0 +1,164 @@
+version: 1
+description: Project-original temporary fillers for minutes not covered by imported literary datasets.
+
+quotes:
+  "06:07":
+    - id: gap-0607-project-original-001
+      text: "At 06:07, the clock kept its own small counsel while the house slowly remembered morning."
+      time_text: "06:07"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "06:18":
+    - id: gap-0618-project-original-001
+      text: "At 06:18, the kettle had not yet sung, but the light was already rehearsing the day."
+      time_text: "06:18"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "08:21":
+    - id: gap-0821-project-original-001
+      text: "At 08:21, the page lay open as if it had been waiting longer than the reader."
+      time_text: "08:21"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "10:28":
+    - id: gap-1028-project-original-001
+      text: "At 10:28, even the quietest room seemed to have a sentence forming in it."
+      time_text: "10:28"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "12:31":
+    - id: gap-1231-project-original-001
+      text: "At 12:31, lunch was still an idea, but hunger had begun to argue its case."
+      time_text: "12:31"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "13:36":
+    - id: gap-1336-project-original-001
+      text: "At 13:36, the afternoon settled into its chair and pretended it had nowhere to be."
+      time_text: "13:36"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "13:46":
+    - id: gap-1346-project-original-001
+      text: "At 13:46, a bookmark held its breath between one chapter and the next."
+      time_text: "13:46"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "13:51":
+    - id: gap-1351-project-original-001
+      text: "At 13:51, the minute hand moved with the discretion of someone leaving a library."
+      time_text: "13:51"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "13:52":
+    - id: gap-1352-project-original-001
+      text: "At 13:52, the day turned a page so softly that no one in the room looked up."
+      time_text: "13:52"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+
+  "18:44":
+    - id: gap-1844-project-original-001
+      text: "At 18:44, evening entered by the window and found the book still open."
+      time_text: "18:44"
+      title: "Quotes Clock Gap Fillers"
+      author: "Quotes Clock"
+      source: "Project-original temporary fallback"
+      rights: "project-original"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: "2026-05-14"
+      tags:
+        - project-original
+        - gap-filler
+        - replace-with-literary
+

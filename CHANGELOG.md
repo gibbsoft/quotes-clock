@@ -1,0 +1,126 @@
+# Changelog
+
+## Unreleased
+
+- Switched the native IDF display driver back from bit-banged SPI to hardware SPI on the confirmed ESPHome pin mapping, using automatic DMA so 4 KiB framebuffer chunks transmit reliably.
+- Started open-source release cleanup: switched the repository license to MIT, removed checked-in generated/imported quote corpora, removed OEM PDFs/firmware backups/vendor sample source from the public tree, and changed build defaults to the public sample quote library.
+- Added native IDF display refresh timing metrics and optimized clock-only partial updates so minute ticks redraw only the dirty clock rectangle in RAM before the panel refresh.
+- Documented native display optimisation findings, including rejected standby-wake, PLL waveform, swapped-SPI-pin, no-DMA, and SPI-overclock experiments.
+- Added a native IDF quote-category spike: imported 3,500 normalized classic/general quotes from the CC0-claimed Quotables corpus into a local generated staging library, and added Display-tab category toggles for time-specific and classic quotes.
+- Bumped the native quote-data partition format to `QCQ3` with per-record quote categories, keeping highlight spans only for time-specific quotes and alternating scheduled pane refreshes when both categories are enabled.
+- Resized the native IDF flash layout to two `0x190000` OTA app slots and a larger `0xC0000` quote-data partition so the combined timed/classic quote pack fits.
+- Added a device Licenses tab and repository `THIRD_PARTY_NOTICES.md` to list third-party open source software and content notices.
+- Extended native IDF refresh cadence settings to 7 minutes and made visible clocks tick with clock-rectangle partial refreshes between scheduled main-pane updates.
+- Tightened native IDF 24-hour clock minute ticks further by refreshing only the changed clock glyph cells when the clock layout is stable.
+- Fixed native IDF attribution layout so title/author spacing and bottom alignment use actual rendered glyph bounds instead of padded font line boxes.
+- Changed native IDF fresh-unit Display defaults to match the current prototype settings: layout `1`, 1-minute cadence, 16 px margin, clock hidden, quotes shown, and quote time highlighting enabled.
+- Fixed native IDF Display autosave redraw reliability by preserving pending full-refresh requests, removing a UI sync error in the colour picker code, and briefly holding Display-form status resync after local edits so dropdowns do not flicker back to stale values.
+- Bumped the native IDF firmware version from `0.1.0-native-spike` to `0.2.0`.
+- Added native IDF Display controls for main-pane background/text colours and quote visibility, including larger generated clock fonts so the clock-only layout can fill the main pane in landscape while respecting the configured margin.
+- Added native IDF Display controls for sidebar visibility/colour, top-bar visibility/background/text/date format, and bottom-bar visibility/background/text colours.
+- Fixed native IDF quote attribution rendering so long book titles and author names wrap within the configured content area instead of overflowing the panel edge.
+- Fixed native IDF boot/setup display pages so Wi-Fi connection and fallback AP messages wrap within the configured content area instead of clipping long SSIDs or instructions.
+- Added native IDF Display-tab controls for showing/hiding the clock and highlighting the time phrase inside quotes, including selectable highlight/background and text colours, apparent dithered colour options, and a warning when highlight and text colours match.
+- Changed the native IDF quote-data pack to precompute each quote's time-phrase offset/length so the renderer can highlight the exact time text cheaply at refresh time.
+- Reworked the native IDF Display tab into grouped sections with the main display enable switch at the top; all Display controls now save immediately and the redundant manual Save button was removed.
+- Fixed native IDF display option application after boot and UI changes by ensuring every runtime option is applied before change detection, preventing later fields such as cadence, margin, and highlight settings from being skipped by short-circuit evaluation.
+- Made native IDF Display settings save atomically in NVS, tolerate earlier boolean key formats when loading, and expose saved-vs-runtime display options in `/api/status` for bench diagnostics.
+- Updated the native IDF admin logo/favicon to use a yellow background with white foreground detail where the device artwork would otherwise clash.
+- Fixed portrait attribution positioning so author/title footer lines respect the configured content margin.
+- Reworked the native IDF admin UI settings tabs with Apple-style display/theme switches, layout thumbnails, range sliders for refresh cadence and content margin, grouped static-IP/manual-NTP panels, light/dark mode, footer version/copyright text, and the real 50x50 product logo in the page header and favicon.
+- Fixed native IDF Wi-Fi password handling so saved passwords render as masked placeholders, the reveal button shows the real saved password for authenticated users, and unchanged saved passwords are preserved when Wi-Fi settings are submitted.
+- Wired native IDF display settings more tightly into rendering: cadence now schedules by elapsed minutes since the last completed render, content margin affects clock/quote positioning and quote wrap width, display controls autosave on change, and setting changes queue a redraw.
+- Fixed native IDF DHCP option 42 time sync by enabling DHCP SNTP before station DHCP starts, reconnecting when DHCP-NTP mode is selected, preserving DHCP-learned SNTP server slots after `GOT_IP`, and exposing active SNTP servers in the status API/UI.
+- Expanded native IDF HTTPS route capacity for the larger settings surface and clarified OTA upload copy so rescue/full-flash images are not presented as OTA app images.
+- Started a pure native ESP-IDF firmware spike under `firmware/native-idf`, separate from ESP32 Manager, now using two `0x1C0000` OTA slots plus a separate `quote_data` partition.
+- Ported the JD79660/GDEM075F52 bit-banged display path, generated quote/font assets, four display orientations, layout-aware PTL main-pane partial refresh, daily full-refresh guard, and async display task/watchdog model into the native IDF spike.
+- Added native Wi-Fi STA/fallback AP ownership, NVS-backed config, first-run admin auth, HTTPS-only setup/settings endpoints on port 443, native SNTP modes, and OTA upload to the native IDF spike.
+- Added native-IDF DHCP hostname/status reporting, a protected saved-Wi-Fi recovery action, and a `flash-native-idf` build target.
+- Added station/AP MAC reporting to the native status UI/API, clearer Wi-Fi/display status feedback, and event-driven display redraws when Wi-Fi connects or SNTP syncs.
+- Moved the native admin UI status area back into the tab strip as the first tab and hid the setup AP MAC from the visible status page.
+- Restored an admin UI logout action for the native spike, clearing the browser session password and returning to sign-in without rebooting the device.
+- Moved the native quote table into a versioned `quote_data` partition image, exposed quote-pack status in the UI/API, and added a `flash-native-idf-quote-data` target for quote-only updates.
+- Removed the legacy ESPHome prototype and ESP32 Manager spike trees, leaving the native ESP-IDF firmware as the active firmware path.
+- Moved the native HTTPS bootstrap certificate/key out of source into generated build artifacts fed by local `.env` values or Linux CI secrets, and added a Gitea Actions build using the official ESP-IDF container.
+- Added `native-idf-assets`, `compile-native-idf`, and `check-native-idf-size` build targets; the native binary with Wi-Fi/HTTPS/config/OTA layers is about 1,106 KiB with roughly 686 KiB OTA-slot headroom after the quote-data split.
+- Backed up the OEM ESP32-M075 firmware before flashing the first unit.
+- Brought up the first GDP075FW1 / ESP32-M075 unit with ESPHome 2026.5.1 on the generic `esp32dev` Arduino target.
+- Confirmed Wi-Fi, ESPHome API, OTA, safe mode, fallback AP, captive portal, Improv serial, logger, and SNTP on the flashed device.
+- Confirmed the native ESPHome `epaper_spi` `Waveshare-7.5in-H` display driver works with the GDEM075F52-compatible 800x480 four-color panel.
+- Verified the e-paper pin mapping: `SCK GPIO18`, `MOSI GPIO23`, `BUSY GPIO13` inverted, `RESET GPIO12`, `DC GPIO14`, and `CS GPIO27`.
+- Added a first hardware color test screen for black, white, red, and yellow display output.
+- Replaced the hardware color test with a first quote-clock display layout, including current time, date, waiting-for-time fallback, and minute-based refresh.
+- Added future settings requirements for DHCP/static IP, runtime NTP overrides, authenticated local administration, and HTTPS certificate handling.
+- Documented e-paper safety notes around deep sleep after refresh, FPC handling, 3.3 V signalling, and refresh cadence.
+- Added a tiny built-in project-original quote table with a dynamic fallback for minutes that are not curated yet.
+- Added an ESPHome-lambda output mode to the quote generator so YAML quote data can produce the pasteable firmware table.
+- Delayed the periodic display refresh loop at startup to avoid overlapping the boot render.
+- Embedded a small no-text Quotes Clock logo mark directly in the ESPHome display lambda.
+- Added the logo's light page highlights to the embedded ESPHome pixel art.
+- Added a guarded display refresh script plus Home Assistant display-enable and force-refresh controls.
+- Added a refresh cadence select control for choosing scheduled display refreshes every 1, 2, 3, 4, or 5 minutes while keeping manual and first-sync refreshes immediate.
+- Added a separate OTA-capable ESPHome fast-refresh build spike using a local `epaper_spi` external component with the vendor GDEM075F52 fast-update register sequence.
+- Confirmed a JD79660A PTL partial-window refresh spike that leaves the header static and refreshes the main content area when PTL is sent immediately before `DRF`.
+- Tightened the PTL partial-refresh window to the dynamic time/date/quote area to reduce the visible flashing region.
+- Added an experimental JD79660A partial data-transfer path that sends only the PTL dynamic-window bytes on fast partial updates.
+- Tightened the partial data-transfer window again to skip blank space above the clock and reduce partial transfers to 57,072 bytes.
+- Added a fast-build-only idle guard so SNTP/manual refresh requests skip while the e-paper component is still finishing a previous update.
+- Raised the fast-build SPI data rate to 12MHz after hardware testing showed 20MHz and 40MHz introduced visible text jitter.
+- Added a static yellow footer bar outside the PTL refresh window.
+- Raised the dynamic content and PTL refresh pane to better center it between the static header and footer.
+- Added a fast-build-only daily full refresh to limit long-term e-paper ghosting while keeping normal minute updates partial.
+- Tightened the fast partial-transfer window to 54,448 bytes and kept the controller in warm standby between partial updates, reducing observed warm minute updates to about 12.5 seconds.
+- Added a persistent display layout select for landscape, portrait, and upside-down rendering, with fast-build rotated layouts forced to full refreshes so the landscape PTL window cannot update the wrong area.
+- Forced the next fast-build display update to be a full redraw whenever the display layout selection changes, including transitions back to landscape.
+- Split the display layout selector into explicit landscape, landscape upside-down, portrait, and portrait upside-down options.
+- Fixed the warm partial-refresh standby path so the display state machine returns to idle after each refresh instead of getting stuck with later refreshes skipped.
+- Added a generic display-driver partial-window setter and switched fast refreshes to a layout-aware main-pane window, enabling partial updates in portrait layouts while avoiding the tight-window gray rectangle edge.
+- Documented the rejected fast-refresh experiments: dynamic dirty rectangles, active controller hold, AUTO/PWS tweaks, 20/40MHz SPI overclocking, and register/LUT changes that caused gray ghosting.
+- Added a static OTA release packaging tool and build target that emits an ESPHome-compatible HTTP update manifest, OTA binary, MD5 file, and release metadata.
+- Added a deliberate fast no-Wi-Fi test build target with bogus station credentials, plus refresh/deep-sleep guards so fallback AP and waiting-for-time behavior can be tested.
+- Enabled the ESPHome web server explicitly on port 80 so the local HTTP UI uses the standard browser port.
+- Raised ESP-IDF's HTTP request-header limit for the ESPHome web server so browsers with local-domain cookies do not hit `431 Header Fields Are Too Long`.
+- Made the waiting-for-time display copy cover both offline network and unsynchronised SNTP states.
+- Marked the first valid-time refresh after Wi-Fi reconnect/provisioning as a full refresh in the fast build, avoiding partial-refresh remnants from the waiting screen.
+- Added a helper to refresh the ESPHome YAML's generated quote table from the local full-staging quote library.
+- Replaced the tiny prototype quote table with a generated one-quote-per-minute table covering all 1,440 minutes.
+- Added a PowerShell build entrypoint and Makefile target for producing the single pasteable ESPHome YAML artifact.
+- Made the display-enable guard default on at boot instead of restoring a stale off state that can suppress all refreshes.
+- Added OTA state guards so display refreshes pause once an OTA update begins and resume after abort/error.
+- Moved the display date into the static header, split title and author onto separate attribution lines, shifted the fast build's daily full refresh to the first valid-time refresh of each day, and added a generated-config hash guard so OTA layout changes get one immediate full redraw.
+- Slimmed the static header and switched the header date to a heavier font weight for a stronger yellow date treatment.
+- Added small black footer text with the app title on the left and the version/build label on the right.
+- Reduced the static header further, switched the corner logo to a native 50x50 embedded bitmap, and nudged the main content upward to preserve the layout balance.
+- Switched the static header date and footer labels to Inter while leaving the main clock and quote typography unchanged for a focused readability test.
+- Reduced the dynamic quote text from Roboto 700 to Roboto 500 to test whether lighter one-bit strokes read cleaner on the e-paper panel.
+- Deferred UI-triggered display refreshes and reduced the ESPHome API connection cap so the web UI can close its HTTP request before a long e-paper refresh starts.
+- Changed the attribution block to right-align the book title and author, removed explicit ellipses, and switched those lines to a Times-compatible serif test face.
+- Extended fast-build local font substitution to cover the Inter header/footer fonts and the Times-compatible attribution fonts, keeping local bench builds independent of Google Fonts availability.
+- Documented a future four-color spatial dithering experiment for apparent grey, orange, and light/dark red/yellow accents on static display areas.
+- Added runtime quote fitting that measures rendered text and selects the largest quote font that fits the available area.
+- Changed generated firmware strings to fixed Unicode escapes so non-ASCII quotes compile reliably, and added a small extra glyph list on top of ESPHome's `GF_Latin_Kernel` set so common accented Latin text renders without losing core ASCII glyphs.
+- Added the ESP32 Manager native display driver's first layout-aware fast partial-refresh path, refreshing only the transformed main pane while keeping the header and footer static across landscape, portrait, and upside-down layouts.
+- Added explicit ESP32 Manager web UI controls for the four display layouts and 1-5 minute refresh interval selection.
+- Added a native daily full-refresh guard so the ESP32 Manager partial-refresh path performs one full redraw per local day before resuming partial updates.
+- Added ESP32 Manager web UI display telemetry for refresh type, duration, partial-window bytes/coordinates, driver stage, standby state, and errors.
+- Verified ESP32 Manager partial refreshes across landscape, landscape upside-down, portrait, and portrait upside-down layouts on the first unit.
+- Added ESP32 Manager web UI timezone and daylight-saving controls backed by compact POSIX `TZ` rules.
+- Fixed ESP32 Manager timezone application after SNTP/network updates so `Europe/London` with automatic DST renders BST instead of UTC during summer time.
+- Added an ESP32 Manager clock display setting for 24-hour or AM/PM time rendering.
+- Rendered the ESP32 Manager AM/PM suffix with a dedicated half-size clock font aligned to the main time baseline.
+- Added first-run admin password setup and password-change UI for the ESP32 Manager spike, with framework Basic Auth protecting HTTP, WebSocket, and OTA upload endpoints once configured.
+- Added optional authenticated ESP32 Manager OTA uploads via `-DeviceUser`/`-DevicePassword` or `QUOTES_CLOCK_ADMIN_USER`/`QUOTES_CLOCK_ADMIN_PASSWORD`.
+- Added ESP32 Manager web UI controls for DHCP/manual station addressing, static IP/netmask/gateway/DNS fields, and NTP source selection across the default pool, DHCP option 42, and three manual NTP servers.
+- Added an ESP32 Manager DST `On` mode for forcing daylight time, clarified the DST labels, and showed NTP server lists in the display status panel for default, DHCP option 42, and manual NTP modes.
+- Fixed DHCP option 42 NTP status so it no longer falls back to `pool.ntp.org`, preserves DHCP-learned servers after the lease is acquired, and allows all three DHCP NTP entries through lwIP's SNTP table.
+- Redesigned the ESP32 Manager web UI with a dark-first Apple-style shell, light appearance option, tabbed settings groups, the actual 50x50 product mark in the header, and footer version display.
+- Made background status polling quiet and prevented it from overwriting focused controls, so open dropdowns and in-progress edits are not interrupted.
+- Fixed the display enabled control after the UI redesign by replacing the reset checkbox styling with a dedicated switch.
+- Added quiet root `.env` loading to `build.ps1` for local ESP32 Manager OTA credentials, and ignored `.env` files by default.
+- Normalized generated display text with Unicode NFKC so styled Unicode letter ranges render as ordinary Latin text, and added a display glyph report to quote coverage.
+- Added a prototype opt-in 40-second deep-sleep cycle after successful display refreshes to reduce always-on ESP32/Wi-Fi power draw.
+- Recorded first-unit bring-up details in an ignored local notes file, with a checked-in template for repeatable hardware notes.
+- Added ESPHome `sram1_as_iram: true` for the ESP32 Arduino framework to match the bootloader capability reported by ESPHome.
+- Updated the example ESPHome secrets to match the prototype config's `ap_fallback_password` secret.
+- Started an ESP32 Manager / native ESP-IDF v6.0 firmware spike in a separate `firmware/esp32-manager` tree, including Wi-Fi/OTA/SNTP/API scaffolding, a minimal static page, a first native JD79660 display driver that draws a smoke-test pattern via vendor-style bit-banged SPI, and a binary-size gate for the 4 MB OTA-slot limit.
+- Extended the ESP32 Manager spike with build-time quote/font asset generation from the YAML quote library, a native clock/quote renderer, UK local time handling, runtime display controls in the static web UI, and framework-backed persistence for display settings.

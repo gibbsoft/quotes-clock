@@ -1,0 +1,45 @@
+version: 1
+description: Sample structure for the offline quote library.
+
+quotes:
+  "00:00":
+    - id: sample-midnight-001
+      text: "The clock struck twelve."
+      time_text: "twelve"
+      title: "Example Public-Domain Work"
+      author: "Example Author"
+      source: "Example source URL or dataset name"
+      rights: "public-domain"
+      cover_key: "openlibrary:example"
+      added_at: "2026-05-14"
+      reviewed_at: null
+      tags:
+        - sample
+
+  "07:30":
+    - id: sample-0730-001
+      text: "At half-past seven the house began to stir."
+      time_text: "half-past seven"
+      title: "Example Public-Domain Work"
+      author: "Example Author"
+      source: "Example source URL or dataset name"
+      rights: "public-domain"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: null
+      tags:
+        - sample
+
+  "12:00":
+    - id: sample-noon-001
+      text: "It was noon, and the sun stood high above the square."
+      time_text: "noon"
+      title: "Example Public-Domain Work"
+      author: "Example Author"
+      source: "Example source URL or dataset name"
+      rights: "public-domain"
+      cover_key: null
+      added_at: "2026-05-14"
+      reviewed_at: null
+      tags:
+        - sample
